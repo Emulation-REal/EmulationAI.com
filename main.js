@@ -1,6 +1,7 @@
 const chatbox = document.getElementById('chatbox');
 const userInput = document.getElementById('userInput');
 const sendBtn = document.getElementById('sendBtn');
+const inputForm = document.getElementById('inputArea');
 
 const emulationAIResponses = [
   "Hey, what's up? I'm EmulationAI!",
@@ -15,7 +16,6 @@ const emulationAIResponses = [
   "I'm always here to chat!"
 ];
 
-// Simple keyword-based responses for a bit more interaction
 function getResponse(message) {
   const msg = message.toLowerCase();
 
@@ -50,25 +50,28 @@ function appendMessage(text, sender) {
   chatbox.scrollTop = chatbox.scrollHeight;
 }
 
-function sendMessage() {
-  const text = userInput.value.trim();
-  if (text === '') return;
-  appendMessage(text, 'user');
-  userInput.value = '';
-  
-  // Simulate AI thinking delay
+function sendMessage(message) {
+  if (!message.trim()) return;
+
+  appendMessage(message, 'user');
+
+  // Simulate thinking delay
   setTimeout(() => {
-    const response = getResponse(text);
+    const response = getResponse(message);
     appendMessage(response, 'bot');
-  }, 800);
+  }, 700);
 }
 
-sendBtn.addEventListener('click', sendMessage);
+userInput.addEventListener('input', () => {
+  sendBtn.disabled = userInput.value.trim() === '';
+});
 
-userInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    sendMessage();
-  }
+inputForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const message = userInput.value;
+  sendMessage(message);
+  userInput.value = '';
+  sendBtn.disabled = true;
 });
 
 // Greet user on load
