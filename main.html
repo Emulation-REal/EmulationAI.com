@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EmulationAI Chatbot</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #121212;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      justify-content: center;
+      align-items: center;
+    }
+    #chatbox {
+      background: #222;
+      width: 350px;
+      height: 450px;
+      border-radius: 10px;
+      padding: 20px;
+      overflow-y: auto;
+      box-shadow: 0 0 15px #0af;
+    }
+    .message {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 12px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+    .user {
+      background: #0af;
+      color: white;
+      align-self: flex-end;
+    }
+    .bot {
+      background: #444;
+      color: #eee;
+      align-self: flex-start;
+    }
+    #inputArea {
+      margin-top: 15px;
+      display: flex;
+      width: 350px;
+    }
+    #inputArea input {
+      flex-grow: 1;
+      padding: 10px;
+      border-radius: 10px 0 0 10px;
+      border: none;
+      font-size: 1rem;
+    }
+    #inputArea button {
+      padding: 10px 15px;
+      background: #0af;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 0 10px 10px 0;
+      cursor: pointer;
+    }
+    #inputArea button:hover {
+      background: #08c;
+    }
+  </style>
+</head>
+<body>
+  <div id="chatbox"></div>
+  <div id="inputArea">
+    <input type="text" id="userInput" placeholder="Talk to EmulationAI..." autocomplete="off" />
+    <button id="sendBtn">Send</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
