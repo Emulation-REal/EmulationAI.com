@@ -1,146 +1,207 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EmulationAI Chatbot</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-      background-color: #f6f7f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      color: #202124;
-    }
-
-    #chat-container {
-      width: 420px;
-      height: 600px;
-      background-color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgb(32 33 36 / 0.28);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    #chatbox {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      background-color: #fff;
-      scrollbar-width: thin;
-      scrollbar-color: #ccc transparent;
-    }
-
-    #chatbox::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    #chatbox::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-      border-radius: 10px;
-    }
-
-    .message {
-      max-width: 75%;
-      padding: 14px 20px;
-      border-radius: 20px;
-      font-size: 1rem;
-      line-height: 1.4;
-      word-wrap: break-word;
-      white-space: pre-wrap;
-      box-shadow: 0 1px 1.5px rgb(0 0 0 / 0.1);
-      user-select: text;
-    }
-
-    .user {
-      align-self: flex-end;
-      background-color: #1a73e8;
-      color: white;
-      border-bottom-right-radius: 6px;
-    }
-
-    .bot {
-      align-self: flex-start;
-      background-color: #f1f3f4;
-      color: #202124;
-      border-bottom-left-radius: 6px;
-    }
-
-    #inputArea {
-      display: flex;
-      padding: 14px 20px;
-      border-top: 1px solid #e0e0e0;
-      background-color: #fff;
-    }
-
-    #userInput {
-      flex-grow: 1;
-      border: none;
-      padding: 14px 18px;
-      font-size: 1rem;
-      border-radius: 25px;
-      outline-offset: 2px;
-      outline-color: #1a73e8;
-      box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.1);
-      color: #202124;
-    }
-
-    #userInput::placeholder {
-      color: #5f6368;
-    }
-
-    #userInput:focus {
-      outline-style: solid;
-    }
-
-    #sendBtn {
-      margin-left: 12px;
-      background-color: #1a73e8;
-      border: none;
-      color: white;
-      font-weight: 600;
-      font-size: 1rem;
-      padding: 0 22px;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    #sendBtn:hover:not(:disabled) {
-      background-color: #155ab6;
-    }
-
-    #sendBtn:disabled {
-      background-color: #a6c8ff;
-      cursor: not-allowed;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EmulationAI Chat</title>
+<style>
+  /* Reset */
+  * {
+    box-sizing: border-box;
+  }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #202123;
+    color: #e6e6e6;
+    display: flex;
+    overflow: hidden;
+  }
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    background-color: #111317;
+    border-right: 1px solid #343541;
+    padding: 20px;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sidebar h1 {
+    font-weight: 700;
+    font-size: 24px;
+    color: white;
+    margin: 0;
+  }
+  /* Main chat */
+  .main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #343541;
+    overflow: hidden;
+  }
+  /* Chat messages container */
+  #chatbox {
+    flex-grow: 1;
+    padding: 20px 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: #4b4f58 transparent;
+    scroll-behavior: smooth;
+  }
+  #chatbox::-webkit-scrollbar {
+    width: 8px;
+  }
+  #chatbox::-webkit-scrollbar-thumb {
+    background-color: #4b4f58;
+    border-radius: 4px;
+  }
+  /* Message bubbles */
+  .message {
+    max-width: 65%;
+    padding: 14px 20px;
+    border-radius: 20px;
+    font-size: 1rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    user-select: text;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+  }
+  .user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #10a37f, #43d9ad);
+    color: white;
+    border-bottom-right-radius: 6px;
+  }
+  .bot {
+    align-self: flex-start;
+    background-color: #444654;
+    color: #e6e6e6;
+    border-bottom-left-radius: 6px;
+  }
+  /* Input area */
+  #inputArea {
+    display: flex;
+    padding: 16px 20px;
+    border-top: 1px solid #343541;
+    background-color: #40414f;
+    align-items: center;
+  }
+  #userInput {
+    flex-grow: 1;
+    background-color: #202123;
+    border: none;
+    border-radius: 9999px;
+    padding: 14px 20px;
+    font-size: 1rem;
+    color: #e6e6e6;
+    outline-offset: 2px;
+    outline-color: #10a37f;
+    box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.5);
+    transition: box-shadow 0.2s ease;
+  }
+  #userInput:focus {
+    box-shadow: 0 0 8px #10a37f;
+  }
+  #sendBtn {
+    margin-left: 12px;
+    background-color: #10a37f;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 10px 22px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #sendBtn:hover:not(:disabled) {
+    background-color: #0e8c6e;
+  }
+  #sendBtn:disabled {
+    background-color: #43d9ad80;
+    cursor: not-allowed;
+  }
+</style>
 </head>
 <body>
-  <div id="chat-container" role="main" aria-label="EmulationAI Chat">
+  <nav class="sidebar" aria-label="Sidebar Navigation">
+    <h1>EmulationAI</h1>
+  </nav>
+
+  <main class="main" role="main" aria-label="Chat area">
     <div id="chatbox" role="log" aria-live="polite" aria-relevant="additions"></div>
-    <form id="inputArea" aria-label="Send message">
+
+    <form id="inputArea" aria-label="Send message form">
       <input
         type="text"
         id="userInput"
-        placeholder="Talk to EmulationAI..."
         autocomplete="off"
-        aria-required="true"
-        aria-label="Message input"
+        aria-label="Chat message input"
+        required
       />
       <button id="sendBtn" type="submit" disabled>Send</button>
     </form>
-  </div>
+  </main>
 
-  <script src="script.js"></script>
+  <script>
+    const chatbox = document.getElementById('chatbox');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const inputForm = document.getElementById('inputArea');
+
+    // Simple bot responses for demonstration
+    function getResponse(message) {
+      const m = message.toLowerCase();
+      if (m.includes('hello') || m.includes('hi')) return "Hey! How can I help you?";
+      if (m.includes('how are you')) return "I'm great, thanks for asking!";
+      if (m.includes('your name')) return "I'm EmulationAI, your fun AI companion.";
+      if (m.includes('joke')) return "Why do programmers prefer dark mode? Because light attracts bugs!";
+      if (m.includes('bye') || m.includes('goodbye')) return "Goodbye! Talk to you later.";
+      return "Interesting! Tell me more.";
+    }
+
+    function appendMessage(text, sender) {
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message', sender);
+      msgDiv.textContent = text;
+      chatbox.appendChild(msgDiv);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function sendMessage(message) {
+      if (!message.trim()) return;
+      appendMessage(message, 'user');
+      userInput.value = '';
+      sendBtn.disabled = true;
+
+      setTimeout(() => {
+        const response = getResponse(message);
+        appendMessage(response, 'bot');
+      }, 600);
+    }
+
+    // Enable send button only when input has text
+    userInput.addEventListener('input', () => {
+      sendBtn.disabled = userInput.value.trim() === '';
+    });
+
+    // Handle form submit (send message)
+    inputForm.addEventListener('submit', e => {
+      e.preventDefault();
+      sendMessage(userInput.value);
+    });
+
+    // Greet user on load
+    window.onload = () => {
+      appendMessage("Hello! I'm EmulationAI. Let's chat!", 'bot');
+      userInput.focus();
+    };
+  </script>
 </body>
 </html>
